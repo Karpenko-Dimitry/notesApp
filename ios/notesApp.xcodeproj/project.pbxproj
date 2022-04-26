@@ -12,8 +12,19 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		215A3CABAB3A450AB1BDB8C5 /* Hurricane-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 99D0E23CFA5A41EF96163BAE /* Hurricane-Regular.ttf */; };
+		46C32502971D43ECB6947937 /* Inspiration-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1DC694A14E6C41789C6362DF /* Inspiration-Regular.ttf */; };
+		4D8D9E20F4984C709EC8AC3A /* Nunito-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 556B63FC865E4FA48C2284E4 /* Nunito-Bold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-notesApp-notesAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-notesApp-notesAppTests.a */; };
+		7CC03328045C461F9C8A6C16 /* Anton-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CEF0ABF11C64910BD72803D /* Anton-Regular.ttf */; };
+		7F19BD005D334ADA91C01C62 /* Teko-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4555417F0ED242D7BCC5F542 /* Teko-Light.ttf */; };
+		80097508F98D403785BD4E75 /* Teko-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EE123301E75A43A7ACB92FCE /* Teko-Regular.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		93285A523B294CFBA161E730 /* Hurricane-Regular copy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E4855F103DD9400FADD1B220 /* Hurricane-Regular copy.ttf */; };
+		997465CDA33C4F3AAC26C176 /* Teko-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA52C0287A4C41899B79E66E /* Teko-Bold.ttf */; };
+		B672EEFE2D234F91A7E640C8 /* Nunito-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA9D3B3FE64D4B20A59A08A9 /* Nunito-Regular.ttf */; };
+		B76583BCAA144FE680FACEBE /* Teko-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89ED84EBAC564B76A566BEF9 /* Teko-SemiBold.ttf */; };
+		F4F64CB8D9584B02BF4AC4AF /* Teko-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D0DA21967BC341CC90A2C80D /* Teko-Medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,13 +48,24 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = notesApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = notesApp/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-notesApp-notesAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notesApp-notesAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DC694A14E6C41789C6362DF /* Inspiration-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inspiration-Regular.ttf"; path = "../assets/fonts/Inspiration-Regular.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-notesApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notesApp.debug.xcconfig"; path = "Target Support Files/Pods-notesApp/Pods-notesApp.debug.xcconfig"; sourceTree = "<group>"; };
+		3CEF0ABF11C64910BD72803D /* Anton-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Anton-Regular.ttf"; path = "../assets/fonts/Anton-Regular.ttf"; sourceTree = "<group>"; };
+		4555417F0ED242D7BCC5F542 /* Teko-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Teko-Light.ttf"; path = "../assets/fonts/Teko-Light.ttf"; sourceTree = "<group>"; };
+		556B63FC865E4FA48C2284E4 /* Nunito-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Bold.ttf"; path = "../assets/fonts/Nunito-Bold.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-notesApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notesApp.release.xcconfig"; path = "Target Support Files/Pods-notesApp/Pods-notesApp.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-notesApp-notesAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notesApp-notesAppTests.debug.xcconfig"; path = "Target Support Files/Pods-notesApp-notesAppTests/Pods-notesApp-notesAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-notesApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-notesApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = notesApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-notesApp-notesAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-notesApp-notesAppTests.release.xcconfig"; path = "Target Support Files/Pods-notesApp-notesAppTests/Pods-notesApp-notesAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		89ED84EBAC564B76A566BEF9 /* Teko-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Teko-SemiBold.ttf"; path = "../assets/fonts/Teko-SemiBold.ttf"; sourceTree = "<group>"; };
+		99D0E23CFA5A41EF96163BAE /* Hurricane-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Hurricane-Regular.ttf"; path = "../assets/fonts/Hurricane-Regular.ttf"; sourceTree = "<group>"; };
+		D0DA21967BC341CC90A2C80D /* Teko-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Teko-Medium.ttf"; path = "../assets/fonts/Teko-Medium.ttf"; sourceTree = "<group>"; };
+		E4855F103DD9400FADD1B220 /* Hurricane-Regular copy.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Hurricane-Regular copy.ttf"; path = "../assets/fonts/Hurricane-Regular copy.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EE123301E75A43A7ACB92FCE /* Teko-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Teko-Regular.ttf"; path = "../assets/fonts/Teko-Regular.ttf"; sourceTree = "<group>"; };
+		FA52C0287A4C41899B79E66E /* Teko-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Teko-Bold.ttf"; path = "../assets/fonts/Teko-Bold.ttf"; sourceTree = "<group>"; };
+		FA9D3B3FE64D4B20A59A08A9 /* Nunito-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Nunito-Regular.ttf"; path = "../assets/fonts/Nunito-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +128,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		763ABFCBA4644F00AB64C0D7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3CEF0ABF11C64910BD72803D /* Anton-Regular.ttf */,
+				99D0E23CFA5A41EF96163BAE /* Hurricane-Regular.ttf */,
+				E4855F103DD9400FADD1B220 /* Hurricane-Regular copy.ttf */,
+				1DC694A14E6C41789C6362DF /* Inspiration-Regular.ttf */,
+				556B63FC865E4FA48C2284E4 /* Nunito-Bold.ttf */,
+				FA9D3B3FE64D4B20A59A08A9 /* Nunito-Regular.ttf */,
+				FA52C0287A4C41899B79E66E /* Teko-Bold.ttf */,
+				4555417F0ED242D7BCC5F542 /* Teko-Light.ttf */,
+				D0DA21967BC341CC90A2C80D /* Teko-Medium.ttf */,
+				EE123301E75A43A7ACB92FCE /* Teko-Regular.ttf */,
+				89ED84EBAC564B76A566BEF9 /* Teko-SemiBold.ttf */,
+			);
+			name = Resources;
+			path = "";
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +163,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				763ABFCBA4644F00AB64C0D7 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -244,6 +286,17 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				7CC03328045C461F9C8A6C16 /* Anton-Regular.ttf in Resources */,
+				215A3CABAB3A450AB1BDB8C5 /* Hurricane-Regular.ttf in Resources */,
+				93285A523B294CFBA161E730 /* Hurricane-Regular copy.ttf in Resources */,
+				46C32502971D43ECB6947937 /* Inspiration-Regular.ttf in Resources */,
+				4D8D9E20F4984C709EC8AC3A /* Nunito-Bold.ttf in Resources */,
+				B672EEFE2D234F91A7E640C8 /* Nunito-Regular.ttf in Resources */,
+				997465CDA33C4F3AAC26C176 /* Teko-Bold.ttf in Resources */,
+				7F19BD005D334ADA91C01C62 /* Teko-Light.ttf in Resources */,
+				F4F64CB8D9584B02BF4AC4AF /* Teko-Medium.ttf in Resources */,
+				80097508F98D403785BD4E75 /* Teko-Regular.ttf in Resources */,
+				B76583BCAA144FE680FACEBE /* Teko-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

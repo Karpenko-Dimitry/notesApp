@@ -50,7 +50,7 @@ class AuthService {
      * @param password
      */
     public static async signIn(email: string, password: string) {
-        return ApiRequestService.post('/users/auth', {
+        return ApiRequestService.post('/users/login', {
             email: email,
             password: password,
         });
