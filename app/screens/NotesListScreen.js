@@ -11,6 +11,7 @@ import {
 import Row from '../elements/components/Row';
 import NoteService from '../services/NoteService';
 import CategoryService from '../services/CategoryService';
+import TagService from '../services/TagService';
 import NoteCard from '../elements/components/NoteCard';
 import { globalStyles, borderColor, textColor } from './../share/globalStyles';
 import SelectBox from 'react-native-multi-selectbox';
@@ -22,7 +23,9 @@ const NotesListScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const [notes, setNotes] = useState([]);
     const [categories, setCategory] = useState([]);
+    const [tags, setTags] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
     const [pagination, setPagination] = useReducer(
         (_old, _new) => {
             return { ..._old, ..._new };
@@ -33,11 +36,18 @@ const NotesListScreen = ({ navigation, route }) => {
         },
     );
 
-    const onMultiChange = () => {
+    const onMultiChangeCategories = () => {
         return (item) => {
             let categories = xorBy(selectedCategories, [item], 'id');
             setSelectedCategories(categories);
             setFilter({ category: categories.map((item) => item.id).join(',') });
+        };
+    };
+    const onMultiChangeTags = () => {
+        return (item) => {
+            let tags = xorBy(selectedTags, [item], 'id');
+            setSelectedTags(tags);
+            setFilter({ tag: tags.map((item) => item.id).join(',') });
         };
     };
 
@@ -53,9 +63,14 @@ const NotesListScreen = ({ navigation, route }) => {
             setFilter(params.filter);
         }
         if (params && params.category) {
-            const doMultiChange = onMultiChange();
+            const doMultiChangeCategories = onMultiChangeCategories();
 
-            doMultiChange(params.category);
+            doMultiChangeCategories(params.category);
+        }
+        if (params && params.tag) {
+            const doMultiChangeTags = onMultiChangeTags();
+
+            doMultiChangeTags(params.tag);
         }
 
     }, [route]);
@@ -67,6 +82,14 @@ const NotesListScreen = ({ navigation, route }) => {
                 return item;
             });
             setCategory(res.data.data);
+        });
+        TagService.list().then((res) => {
+            res.data.data.map((item) => {
+                item.name = '#' + item.name;
+                item.item = item.name;
+                return item;
+            });
+            setTags(res.data.data);
         });
     }, []);
 
@@ -123,12 +146,46 @@ const NotesListScreen = ({ navigation, route }) => {
                                     labelStyle={{ display: 'none' }}
                                     options={categories || []}
                                     selectedValues={selectedCategories || []}
-                                    onMultiSelect={onMultiChange()}
-                                    onTapClose={onMultiChange()}
+                                    onMultiSelect={onMultiChangeCategories()}
+                                    onTapClose={onMultiChangeCategories()}
                                     arrowIconColor={textColor}
                                     searchIconColor={textColor}
                                     toggleIconColor={textColor}
                                     inputPlaceholder="Categories..."
+                                    containerStyle={{
+                                        borderColor: 'white',
+                                        paddingVertical: 15,
+                                    }}
+                                    optionsLabelStyle={{ fontSize: 15 }}
+                                    multiListEmptyLabelStyle={{
+                                        fontSize: 15,
+                                        color: textColor,
+                                    }}
+                                    inputFilterStyle={{ paddingHorizontal: 15, fontSize: 15 }}
+                                    searchInputProps={{ placeholderTextColor: textColor }}
+                                    optionContainerStyle={{
+                                        backgroundColor: 'white',
+                                        paddingVertical: 7,
+                                        paddingHorizontal: 15,
+                                    }}
+                                    multiOptionContainerStyle={{ backgroundColor: textColor }}
+                                    isMulti
+                                />
+                            </View>
+                        )}
+                        {tags.length > 0 && (
+                            <View style={{ ...styles.search, ...{ paddingVertical: 8 } }}>
+                                <SelectBox
+                                    label="Tags"
+                                    labelStyle={{ display: 'none' }}
+                                    options={tags || []}
+                                    selectedValues={selectedTags || []}
+                                    onMultiSelect={onMultiChangeTags()}
+                                    onTapClose={onMultiChangeTags()}
+                                    arrowIconColor={textColor}
+                                    searchIconColor={textColor}
+                                    toggleIconColor={textColor}
+                                    inputPlaceholder="Tags..."
                                     containerStyle={{
                                         borderColor: 'white',
                                         paddingVertical: 15,

@@ -19,9 +19,7 @@ const NotesDetailesScreen = ({ route, navigation }) => {
                     {categories.length &&
                         categories.map((category, index) => (
                             <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate('Notes', { category: category })
-                                }
+                                onPress={() => navigation.navigate('Notes', { category: category })}
                                 style={{ flexDirection: 'row' }}
                                 key={category.id}>
                                 <Text style={globalStyles.link}>{category.name}</Text>
@@ -36,9 +34,7 @@ const NotesDetailesScreen = ({ route, navigation }) => {
                     {tags.length &&
                         tags.map((tag, index) => (
                             <TouchableOpacity
-                                onPress={() =>
-                                    navigation.navigate('Notes', { filter: { tag: tag.name } })
-                                }
+                                onPress={() => navigation.navigate('Notes', { tag: tag })}
                                 style={{ flexDirection: 'row' }}
                                 key={tag.id}>
                                 <Text style={globalStyles.link}>#{tag.name}</Text>
