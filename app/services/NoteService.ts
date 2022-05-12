@@ -4,8 +4,8 @@ class NoteService {
     /**
      * Registration endpoint
      */
-    public static async list() {
-        return ApiRequestService.get('/notes');
+    public static async list(data = {per_page: 20}) {
+        return ApiRequestService.get('/notes', data);
     }
 }
 

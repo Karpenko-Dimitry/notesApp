@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     Keyboard,
     StyleSheet,
-    Text,
+    Text
 } from 'react-native';
 import { Icon } from 'react-native-eva-icons';
 import Row from '../components/Row';
@@ -13,23 +13,25 @@ import { globalStyles } from '../../share/globalStyles';
 
 const PopUp = ({ children, onClose }) => {
     return (
-        <View
-            style={{
-                ...globalStyles.container,
-                ...styles.loginForm,
-            }}>
-            <Row style={styles.header}>
-                <View style={styles.headerItem}>
-                    <TouchableOpacity onPress={onClose} style={{ alignSelf: 'flex-start' }}>
-                        <Icon name="close-outline" fill="black" width={30} height={30} />
-                    </TouchableOpacity>
-                </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View
+                style={{
+                    ...globalStyles.container,
+                    ...styles.loginForm,
+                }}>
+                <Row style={styles.header}>
+                    <View style={styles.headerItem}>
+                        <TouchableOpacity onPress={onClose} style={{ alignSelf: 'flex-start' }}>
+                            <Icon name="close-outline" fill="black" width={30} height={30} />
+                        </TouchableOpacity>
+                    </View>
 
-                <Text style={styles.headerItem}>Login</Text>
-                <Text style={styles.headerItem} />
-            </Row>
-            {children}
-        </View>
+                    <Text style={styles.headerItem}>Login</Text>
+                    <Text style={styles.headerItem} />
+                </Row>
+                {children}
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 

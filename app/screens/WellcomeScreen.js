@@ -1,19 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {
-    FlatList,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    useColorScheme,
-    View,
-    ImageBackground,
-    TouchableWithoutFeedback,
-    TouchableOpacity,
-    Modal,
-    Keyboard,
-} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableWithoutFeedback } from 'react-native';
 import { globalStyles } from '../share/globalStyles';
 import Button from '../elements/components/Button';
 import LoginPopUp from '../elements/pop-ups/LoginPopUp';
@@ -35,6 +21,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
+    button: {
+        marginVertical: 10,
+    },
     logoText: {
         fontFamily: 'Hurricane-Regular',
         color: globalStyles.global.color_ylw,
@@ -45,11 +34,9 @@ const styles = StyleSheet.create({
     },
 });
 
-const WellcomeScreen = () => {
+const WellcomeScreen = ({ navigation }) => {
     const [logIn, setLogin] = useState(false);
     const authContext = useContext(store);
-
-    console.log(authContext.getToken());
 
     const imgBg = require('../../assets/images/auth-background.jpg');
 
@@ -67,19 +54,37 @@ const WellcomeScreen = () => {
                     <Row>
                         <View style={styles.buttonsBlock}>
                             <Button
-                                style={{ marginVertical: 20 }}
+                                title="Public notes"
+                                type="white"
+                                style={styles.button}
+                                onPress={() => navigation.navigate('Notes')}
+                            />
+                            <Button
                                 title="Login"
+                                style={styles.button}
                                 onPress={() => {
                                     setLogin(true);
                                 }}
                             />
-                            <Button title="Register" onPress={() => setLogin(true)} />
+                            <Button
+                                title="Register"
+                                style={styles.button}
+                                onPress={() => setLogin(true)}
+                            />
                         </View>
                     </Row>
                 </View>
             </TouchableWithoutFeedback>
 
-            {logIn && <LoginPopUp onClose={() => setLogin(false)} />}
+            {logIn && (
+                <LoginPopUp
+                    navigation={navigation}
+                    onClose={() => {
+                        setLogin(false);
+                        console.log('closed');
+                    }}
+                />
+            )}
         </ImageBackground>
     );
 };

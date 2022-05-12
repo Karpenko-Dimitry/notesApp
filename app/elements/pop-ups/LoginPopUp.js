@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, TextInput, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StyleSheet, TextInput, Alert, Keyboard } from 'react-native';
 import Button from '../components/Button';
 import { globalStyles } from '../../share/globalStyles';
 import Row from '../components/Row';
@@ -9,7 +8,7 @@ import FormError from '../forms/FormError';
 import PopUp from './PopUp';
 import { store } from '../../contexts/AuthContext';
 
-const LoginPopUp = ({ onClose }) => {
+const LoginPopUp = ({ onClose, navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -20,15 +19,15 @@ const LoginPopUp = ({ onClose }) => {
         if (loading) {
             return;
         }
-
+        Keyboard.dismiss();
         setLoading(true);
         setErrors({});
 
         AuthService.signIn(email, password).then(
             async (res) => {
                 await authContext.signIn(res.data.access_token);
-
-                // navigation.navigate('drawer', { screen: 'Home' });
+                onClose();
+                navigation.navigate('Notes');
             },
             (res) => {
                 setLoading(false);
@@ -56,6 +55,7 @@ const LoginPopUp = ({ onClose }) => {
             </Row>
             <Row>
                 <TextInput
+                    secureTextEntry
                     style={globalStyles.input}
                     placeholder="Password"
                     value={password}

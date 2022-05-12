@@ -195,6 +195,7 @@ class ApiRequestService {
         props.forEach((prop: string) => {
             if (Array.isArray(data[prop])) {
                 data[prop + '[]'] = data[prop];
+                queryParams.push(prop + '=' + data[prop]);
                 delete data[prop];
             } else {
                 queryParams.push(prop + '=' + data[prop]);

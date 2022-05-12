@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const borderColor = '#e0dede';
+export const textColor = '#6d756f';
 
 export const globalStyles = StyleSheet.create({
     global: {
@@ -14,6 +15,18 @@ export const globalStyles = StyleSheet.create({
         borderColor: borderColor,
         borderWidth: 1,
         borderRadius: 7,
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+    }, 
+    card: {
+        borderColor: borderColor,
+        borderWidth: 1,
+        borderRadius: 7,
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        marginBottom: 10
+    }, 
+    link: {
+        color: 'blue',
+        textDecorationLine: 'underline'
     }
 });

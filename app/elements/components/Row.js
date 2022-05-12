@@ -4,7 +4,8 @@ import { View, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10   
+        paddingHorizontal: 20,
+        paddingVertical: 10   
     }
 })
 const Row = ({ children, style }) => {
