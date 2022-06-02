@@ -154,7 +154,7 @@ class ApiRequestService {
             if (method === 'GET') {
                 getQueryString = this.dataToGetQueryString(data);
             } else {
-                params = { ...params, ...{ body: JSON.stringify(data) } };
+                params = { ...params, ...{ body: data instanceof FormData ? data : JSON.stringify(data) } };
             }
 
             params = callback(params);

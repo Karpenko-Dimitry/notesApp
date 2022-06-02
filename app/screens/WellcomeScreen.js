@@ -1,8 +1,18 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableWithoutFeedback } from 'react-native';
+import {
+    StyleSheet,
+    Text,
+    View,
+    ImageBackground,
+    TouchableWithoutFeedback,
+    Modal,
+    Pressable,
+    Alert,
+} from 'react-native';
 import { globalStyles } from '../share/globalStyles';
 import Button from '../elements/components/Button';
 import LoginPopUp from '../elements/pop-ups/LoginPopUp';
+import RegisterPopUp from '../elements/pop-ups/RegisterPopUp';
 import Row from '../elements/components/Row';
 import { store } from '../contexts/AuthContext';
 const styles = StyleSheet.create({
@@ -21,9 +31,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
-    button: {
-        marginVertical: 10,
-    },
     logoText: {
         fontFamily: 'Hurricane-Regular',
         color: globalStyles.global.color_ylw,
@@ -32,10 +39,18 @@ const styles = StyleSheet.create({
         letterSpacing: 5,
         textTransform: 'uppercase',
     },
+    button: {
+        marginVertical: 10,
+
+        borderRadius: 15,
+        padding: 5,
+        elevation: 2,
+    },
 });
 
 const WellcomeScreen = ({ navigation }) => {
     const [logIn, setLogin] = useState(false);
+    const [register, setRegister] = useState(false);
     const authContext = useContext(store);
 
     const imgBg = require('../../assets/images/auth-background.jpg');
@@ -45,7 +60,6 @@ const WellcomeScreen = ({ navigation }) => {
             <TouchableWithoutFeedback
                 onPress={() => {
                     setLogin(false);
-                    console.log(1);
                 }}>
                 <View style={styles.item}>
                     <View style={styles.logoBlock}>
@@ -59,29 +73,45 @@ const WellcomeScreen = ({ navigation }) => {
                                 style={styles.button}
                                 onPress={() => navigation.navigate('Notes')}
                             />
-                            <Button
-                                title="Login"
-                                style={styles.button}
-                                onPress={() => {
-                                    setLogin(true);
-                                }}
-                            />
-                            <Button
-                                title="Register"
-                                style={styles.button}
-                                onPress={() => setLogin(true)}
-                            />
+                            {(!authContext.isSignedIn && (
+                                <>
+                                    <Button
+                                        title="Login"
+                                        style={styles.button}
+                                        onPress={() => {
+                                            setLogin(true);
+                                        }}
+                                    />
+                                    <Button
+                                        title="Register"
+                                        style={styles.button}
+                                        onPress={() => setRegister(true)}
+                                    />
+                                </>
+                            )) || (
+                                <Button
+                                    title="Logout"
+                                    style={styles.button}
+                                    onPress={() => authContext.signOut()}
+                                />
+                            )}
                         </View>
                     </Row>
                 </View>
             </TouchableWithoutFeedback>
-
             {logIn && (
                 <LoginPopUp
                     navigation={navigation}
                     onClose={() => {
                         setLogin(false);
-                        console.log('closed');
+                    }}
+                />
+            )}
+            {register && (
+                <RegisterPopUp
+                    navigation={navigation}
+                    onClose={() => {
+                        setRegister(false);
                     }}
                 />
             )}

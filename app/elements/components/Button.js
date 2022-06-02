@@ -22,8 +22,8 @@ const Button = ({ title, onPress, style, type = "yellow" }) => {
             borderColor: bg,
             borderRadius: 7,
             shadowOffset: {
-                width: 10,
-                height: 10
+                width: 5,
+                height: 5
             },
             shadowColor: '#000',
             shadowOpacity: 0.5,

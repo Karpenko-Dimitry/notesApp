@@ -6,7 +6,7 @@ const NoteCard = ({ item, onPress }) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={globalStyles.card}>
-                <Text>{item.title}</Text>
+                <Text>{item.id} {item.title}</Text>
             </View>
         </TouchableOpacity>
     );

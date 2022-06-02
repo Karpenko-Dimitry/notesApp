@@ -9,7 +9,8 @@ export const globalStyles = StyleSheet.create({
         color_border: borderColor,
     },
     container: {
-        
+        flex: 1,
+        backgroundColor: 'white',
     },
     input: {
         borderColor: borderColor,
