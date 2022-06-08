@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     Text,
@@ -17,11 +17,13 @@ const Chosen = ({
     onChange = null,
     itemPrefix = '#',
     closeDropDown = null,
+    placeholder = null,
 }) => {
     const [dropDown, setDropDown] = useState(false);
     const [chosenItems, setChosenItems] = useState([]);
     const [chosenSelected, setChosenSelected] = useState([]);
     const [text, setText] = useState(null);
+    const inputRef = useRef(null);
 
     const filter = (text) => {
         setText(text);
@@ -34,23 +36,28 @@ const Chosen = ({
         if (onChange) {
             let _chosenItems = [...chosenItems];
             _chosenItems.splice(chosenItems.indexOf(item), 1);
+            inputRef.current.focus();
             setChosenItems(_chosenItems);
             onChange([...selectedItems, item]);
         }
     };
 
     const handleOnAddText = (text) => {
-        let itemFromCollection = items.filter((item) => item.id && item.name == text);
-        let exists = selectedItems.filter((item) => item.name == text);
-
-        if (!exists[0]) {
-            onChange([...selectedItems, itemFromCollection[0] || { name: text }]);
-        }
-
-        if (itemFromCollection[0]) {
-            let _chosenItems = [...chosenItems];
-            _chosenItems.splice(chosenItems.indexOf(itemFromCollection[0]), 1);
-            setChosenItems(_chosenItems);
+        if (text) {
+            let itemFromCollection = items.filter((item) => item.id && item.name == text);
+            let exists = selectedItems.filter((item) => item.name == text);
+    
+            if (!exists[0]) {
+                onChange([...selectedItems, itemFromCollection[0] || { name: text }]);
+            }
+    
+            if (itemFromCollection[0]) {
+                let _chosenItems = [...chosenItems];
+                _chosenItems.splice(chosenItems.indexOf(itemFromCollection[0]), 1);
+                setChosenItems(_chosenItems);
+            }
+    
+            setText(null);
         }
     };
 
@@ -67,10 +74,6 @@ const Chosen = ({
     };
 
     useEffect(() => {
-        setChosenItems(items);
-    }, [items]);
-
-    useEffect(() => {
         let _chosenItems = [...chosenItems];
         let _selectedItems = [...selectedItems];
 
@@ -78,10 +81,13 @@ const Chosen = ({
         _chosenItems = _chosenItems.filter((item) => {
             return !_selectedItems.includes(item.name);
         });
-
         setChosenItems(_chosenItems);
         setChosenSelected(selectedItems);
     }, [selectedItems]);
+
+    useEffect(() => {
+        setChosenItems(items);
+    }, [items]);
 
     useEffect(() => {
         setDropDown(false);
@@ -126,7 +132,7 @@ const Chosen = ({
         inputContainer: {
             flexDirection: 'row',
             alignItems: 'center',
-            minWidth: 80,
+            width: '100%',
         },
         arrowIcon: {
             width: 22,
@@ -153,6 +159,7 @@ const Chosen = ({
             borderBottomRightRadius: 7,
         },
         dropDownItem: {
+            width: '100%',
             paddingHorizontal: 15,
             paddingVertical: 3,
         },
@@ -174,25 +181,34 @@ const Chosen = ({
                             </View>
                         ))}
                     <View style={styles.inputContainer}>
-                        <TouchableOpacity onPress={() => setDropDown(!dropDown)}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setDropDown(!dropDown);
+                                setText(null);
+                                dropDown ? inputRef.current.blur() : inputRef.current.focus();
+                            }}>
                             <Icon
                                 style={styles.arrowIcon}
                                 name={dropDown ? 'arrow-down-outline' : 'arrow-right-outline'}
                             />
                         </TouchableOpacity>
                         <TextInput
+                            ref={inputRef}
+                            autoCapitalize='none'
                             style={styles.input}
                             onFocus={() => setDropDown(true)}
                             onBlur={() => console.log('blur')}
                             onKeyPress={(e) => console.log(e.nativeEvent.key == 'Backspace')}
                             onSubmitEditing={(e) => handleOnAddText(text)}
-                            placeholder="Type or click here"
+                            placeholder={placeholder || 'Type or click here'}
                             value={text}
                             onChangeText={filter}
+                            blurOnSubmit={false}
                         />
                     </View>
                 </View>
-                {dropDown && chosenItems && (
+
+                {dropDown && chosenItems.length > 0 && (
                     <TouchableWithoutFeedback onBlur={() => console.log('123')}>
                         <View style={styles.dropDownContainer}>
                             <ScrollView nestedScrollEnabled={true}>

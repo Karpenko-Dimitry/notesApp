@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, Component, useContext } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
     FlatList,
     StyleSheet,
@@ -14,12 +14,15 @@ import CategoryService from '../services/CategoryService';
 import TagService from '../services/TagService';
 import NoteCard from '../elements/components/NoteCard';
 import { globalStyles, borderColor, textColor } from './../share/globalStyles';
-import SelectBox from 'react-native-multi-selectbox';
-import { xorBy } from 'lodash';
+import Chosen from '../elements/components/Chosen';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 let lastPage = 2;
 
-const NotesListScreen = ({ navigation, route }) => {    
+const NotesListScreen = ({ navigation, route }) => {
+    const [filter, setFilter] = useState({});
+    const [scrollBegin, setScrollBegin] = useState(false);
+    const insets = useSafeAreaInsets();
     const [loading, setLoading] = useState(false);
     const [notes, setNotes] = useState([]);
     const [categories, setCategory] = useState([]);
@@ -36,52 +39,55 @@ const NotesListScreen = ({ navigation, route }) => {
         },
     );
 
-    const onMultiChangeCategories = () => {
-        return (item) => {
-            let categories = xorBy(selectedCategories, [item], 'id');
-            setSelectedCategories(categories);
-            setFilter({ category: categories.map((item) => item.id).join(',') });
-        };
-    };
-    const onMultiChangeTags = () => {
-        return (item) => {
-            let tags = xorBy(selectedTags, [item], 'id');
-            setSelectedTags(tags);
-            setFilter({ tag: tags.map((item) => item.id).join(',') });
-        };
+    const onTagChange = (tag) => {
+        setSelectedTags(tag);   
+        setFilter({...filter, tag: tag.map((item) => item.id).join(',')});
+    }
+    
+    const onCategoryChange = (categories) => {
+        setSelectedCategories(categories);   
+        setFilter({...filter, category: categories.map((item) => item.id).join(',')});
+    }
+
+    const handleOnEndReached = () => {
+        if (!loading && scrollBegin && pagination.page < lastPage) {
+            setLoading(true);
+            setPagination({ page: pagination.page + 1 });
+        }
     };
 
-    const [filter, setFilter] = useReducer((_old, _new) => {
-        setPagination({ page: 1 });
-        return { ..._old, ..._new };
-    }, {});
+    const ListFooterComponent = () => {
+        return <Text style={{ textAlign: 'center' }}>Loading...</Text>;
+    };
+
+    const EmptyList = () => (
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text style={styles.emptyList}>Any item found...</Text>
+        </View>
+    );
 
     useEffect(() => {
-        const { params } = route;
+        const params = route.params;
 
         if (params && params.filter) {
             setFilter(params.filter);
+            setSelectedCategories([]);
+            setSelectedTags([]);
         }
         if (params && params.category) {
-            const doMultiChangeCategories = onMultiChangeCategories();
-
-            doMultiChangeCategories(params.category);
+            onCategoryChange([params.category]);
         }
         if (params && params.tag) {
-            const doMultiChangeTags = onMultiChangeTags();
-
-            doMultiChangeTags(params.tag);
+            onTagChange([params.tag]);
+        }
+        if (params && params.user_id) {
+            setFilter({user_id: params.user_id});
         }
     }, [route]);
 
     useEffect(() => {
-        
         CategoryService.list().then(
             (res) => {
-                res.data.data.map((item) => {
-                    item.item = item.name;
-                    return item;
-                });
                 setCategory(res.data.data);
             },
             (res) => {
@@ -92,12 +98,8 @@ const NotesListScreen = ({ navigation, route }) => {
                 Alert.alert(JSON.stringify(res.status), JSON.stringify(res.data.message));
             },
         );
+
         TagService.list().then((res) => {
-            res.data.data.map((item) => {
-                item.name = '#' + item.name;
-                item.item = item.name;
-                return item;
-            });
             setTags(res.data.data);
         });
     }, []);
@@ -116,117 +118,89 @@ const NotesListScreen = ({ navigation, route }) => {
         });
     }, [filter, pagination]);
 
-    const handleOnEndReached = () => {
-        if (!loading && pagination.page < lastPage) {
-            setLoading(true);
-            setPagination({ page: pagination.page + 1 });
-        }
-    };
-
-    const ListFooterComponent = () => {
-        return <Text style={{ textAlign: 'center' }}>Loading...</Text>;
-    };
-
-    const EmptyList = () => (
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text style={styles.emptyList}>Any item found...</Text>
-        </View>
-    );
+    const styles = StyleSheet.create({
+        searchBox: {
+            paddingVertical: 20,
+        },
+        search: {
+            marginBottom: 10,
+            borderRadius: 7,
+            paddingHorizontal: 10,
+            backgroundColor: 'white',
+            borderBottomWidth: 1,
+            borderBottomColor: borderColor,
+        },
+        emptyList: {
+            textAlign: 'center',
+            fontWeight: 'bold',
+            letterSpacing: 1,
+            fontSize: 16,
+        },
+    });
 
     return (
-        <View style={globalStyles.container}>
+        <View style={{ ...globalStyles.container, paddingBottom: insets.bottom }}>
             <Row>
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View>
+                <TouchableWithoutFeedback style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+                    <View style={{ flex: 1 }}>
                         <View style={styles.searchBox}>
                             <TextInput
                                 placeholder="Search..."
                                 placeholderTextColor={textColor}
                                 value={filter.query || ''}
-                                onChangeText={(query) => setFilter({ query })}
+                                onChangeText={(query) => setFilter({...filter, query})}
                                 style={{ ...styles.search, ...{ paddingVertical: 15 } }}
                                 returnKeyType="search"
                                 selectionColor="#fc8c03"
                                 selectTextOnFocus={true}
                             />
                             {categories.length > 0 && (
-                                <View style={{ ...styles.search, ...{ paddingVertical: 8 } }}>
-                                    <SelectBox
-                                        label="Categories"
-                                        labelStyle={{ display: 'none' }}
-                                        options={categories || []}
-                                        selectedValues={selectedCategories || []}
-                                        onMultiSelect={onMultiChangeCategories()}
-                                        onTapClose={onMultiChangeCategories()}
-                                        arrowIconColor={textColor}
-                                        searchIconColor={textColor}
-                                        toggleIconColor={textColor}
-                                        inputPlaceholder="Categories..."
+                                <View>
+                                    <Chosen
+                                        items={categories}
+                                        selectedItems={selectedCategories}
+                                        onChange={onCategoryChange}
+                                        closeDropDown={null}
+                                        placeholder="Categories..."
                                         containerStyle={{
-                                            borderColor: 'white',
-                                            paddingVertical: 15,
+                                            borderWidth: 0,
+                                            paddingHorizontal: 0,
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: borderColor,
                                         }}
-                                        optionsLabelStyle={{ fontSize: 15 }}
-                                        multiListEmptyLabelStyle={{
-                                            fontSize: 15,
-                                            color: textColor,
-                                        }}
-                                        inputFilterStyle={{ paddingHorizontal: 15, fontSize: 15 }}
-                                        searchInputProps={{ placeholderTextColor: textColor }}
-                                        optionContainerStyle={{
-                                            backgroundColor: 'white',
-                                            paddingVertical: 7,
-                                            paddingHorizontal: 15,
-                                        }}
-                                        multiOptionContainerStyle={{ backgroundColor: textColor }}
-                                        isMulti
                                     />
                                 </View>
                             )}
-                            {tags.length > 0 && (
-                                <View style={{ ...styles.search, ...{ paddingVertical: 8 } }}>
-                                    <SelectBox
-                                        label="Tags"
-                                        labelStyle={{ display: 'none' }}
-                                        options={tags || []}
-                                        selectedValues={selectedTags || []}
-                                        onMultiSelect={onMultiChangeTags()}
-                                        onTapClose={onMultiChangeTags()}
-                                        arrowIconColor={textColor}
-                                        searchIconColor={textColor}
-                                        toggleIconColor={textColor}
-                                        inputPlaceholder="Tags..."
+                            {tags?.length > 0 && (
+                                <View>
+                                    <Chosen
+                                        items={tags}
+                                        selectedItems={selectedTags}
+                                        onChange={onTagChange}
+                                        closeDropDown={null}
+                                        placeholder="Tags..."
                                         containerStyle={{
-                                            borderColor: 'white',
-                                            paddingVertical: 15,
+                                            borderWidth: 0,
+                                            paddingHorizontal: 0,
+                                            borderBottomWidth: 1,
+                                            borderBottomColor: borderColor,
                                         }}
-                                        optionsLabelStyle={{ fontSize: 15 }}
-                                        multiListEmptyLabelStyle={{
-                                            fontSize: 15,
-                                            color: textColor,
-                                        }}
-                                        inputFilterStyle={{ paddingHorizontal: 15, fontSize: 15 }}
-                                        searchInputProps={{ placeholderTextColor: textColor }}
-                                        optionContainerStyle={{
-                                            backgroundColor: 'white',
-                                            paddingVertical: 7,
-                                            paddingHorizontal: 15,
-                                        }}
-                                        multiOptionContainerStyle={{ backgroundColor: textColor }}
-                                        isMulti
                                     />
                                 </View>
                             )}
                         </View>
-                        <View>
+                        <View style={{ flex: 1 }}>
                             <FlatList
                                 data={notes}
                                 keyExtractor={(item) => item.id}
                                 onEndReached={handleOnEndReached}
+                                onScrollBeginDrag={() => setScrollBegin(true)}
                                 renderItem={({ item }) => (
                                     <NoteCard
                                         item={item}
-                                        onPress={() => navigation.navigate('NotesDetailes', item)}
+                                        onPress={() =>
+                                            navigation.navigate('DrowerNotesDetailes', item)
+                                        }
                                     />
                                 )}
                                 ListEmptyComponent={() => <EmptyList />}
@@ -239,29 +213,5 @@ const NotesListScreen = ({ navigation, route }) => {
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-    },
-    searchBox: {
-        paddingVertical: 20,
-    },
-    search: {
-        marginBottom: 10,
-        borderRadius: 7,
-        paddingHorizontal: 10,
-        backgroundColor: 'white',
-        borderBottomWidth: 1,
-        borderBottomColor: borderColor
-    },
-    emptyList: {
-        textAlign: 'center',
-        fontWeight: 'bold',
-        letterSpacing: 1,
-        fontSize: 16,
-    },
-});
 
 export default NotesListScreen;

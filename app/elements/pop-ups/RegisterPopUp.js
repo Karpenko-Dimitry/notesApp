@@ -29,7 +29,7 @@ const LoginPopUp = ({ onClose, navigation }) => {
             async (res) => {
                 await authContext.signIn(res.data.access_token);
                 onClose();
-                navigation.navigate('Notes');
+                navigation.navigate('AuthDrower');
             },
             (res) => {
                 setLoading(false);

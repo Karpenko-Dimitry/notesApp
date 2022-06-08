@@ -1,5 +1,7 @@
-import React, { useContext} from 'react';
-import { SafeAreaView, StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React, { useContext } from 'react';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 
 import { AuthProvider } from './app/contexts/AuthContext';
 import { PopupProvider } from './app/contexts/PopupContext';
@@ -19,14 +21,13 @@ const App = () => {
     };
 
     return (
-        <SafeAreaView style={{ ...backgroundStyle, ...{ flex: 1 } }}>
-            <PopupProvider>
-                <AuthProvider>
-                    <StatusBar barStyle={isDarkMode ? 'dark-content' : 'light-content'} />
-                    <PublicRoutes />                    
-                </AuthProvider>
-            </PopupProvider>
-        </SafeAreaView>
+        <PopupProvider>
+            <AuthProvider>
+                <SafeAreaProvider>
+                    <PublicRoutes />
+                </SafeAreaProvider>
+            </AuthProvider>
+        </PopupProvider>
     );
 };
 

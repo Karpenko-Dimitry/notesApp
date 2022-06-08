@@ -15,8 +15,7 @@ import FileService from '../../services/FileService';
 import DocumentPicker from 'react-native-document-picker';
 import { Icon } from 'react-native-eva-icons';
 
-const FilePicker = ({ files, onChange }) => {
-
+const FilePicker = ({ files = [], onChange = null, detailes = true, multiple = true, style = {} }) => {
     const upload = async (uploadedFiles) => {
         let result = [];
 
@@ -50,17 +49,43 @@ const FilePicker = ({ files, onChange }) => {
                 if (index != -1) {
                     result.splice(index, 1);
                 }
-                onChange(result)
+                console.log(result);
+                if (onChange) {
+                    onChange(result);
+                }  
             },
             (res) => {
-                if (res.status === 422) {
-                    return setErrors(res.data.errors);
-                }
-
                 Alert.alert(JSON.stringify(res.status), JSON.stringify(res.data.message));
             },
         );
-    }
+    };
+
+    const selectOneFile = async () => {
+        //Opening Document Picker for selection of one file
+        try {
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.allFiles],
+                //There can me more options as well
+                // DocumentPicker.types.allFiles
+                // DocumentPicker.types.images
+                // DocumentPicker.types.plainText
+                // DocumentPicker.types.audio
+                // DocumentPicker.types.pdf
+            });
+
+            upload(result).then((res) => onChange(res));
+        } catch (err) {
+            //Handling any exception (If any)
+            if (DocumentPicker.isCancel(err)) {
+                //If user canceled the document selection
+                alert('Canceled from single doc picker');
+            } else {
+                //For Unknown Error
+                alert('Unknown Error: ' + JSON.stringify(err));
+                throw err;
+            }
+        }
+    };
 
     const selectMultipleFile = async () => {
         //Opening Document Picker for selection of multiple file
@@ -75,8 +100,16 @@ const FilePicker = ({ files, onChange }) => {
                 // DocumentPicker.types.pdf
             });
 
-            upload(results).then((res) => onChange([...res, ...files]))
-
+            upload(results).then(
+                (res) => {
+                    if (onChange) {
+                        onChange([...res, ...files])
+                    }
+                },
+                (res) => {
+                    Alert.alert(JSON.stringify(res.status), JSON.stringify(res.data.message));
+                },
+            );
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
                 //If user canceled the document selection
@@ -91,34 +124,41 @@ const FilePicker = ({ files, onChange }) => {
 
     return (
         <SafeAreaView>
-            <View>
+            <View style={style}>
                 <TouchableOpacity
                     style={{ flexDirection: 'row' }}
                     activeOpacity={0.5}
-                    onPress={selectMultipleFile}>
+                    onPress={multiple ? selectMultipleFile : selectOneFile}>
                     <Text style={styles.buttonStyle}>Upload file</Text>
                 </TouchableOpacity>
-                <ScrollView style={{flex: 1}}>
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        {files.map((item, key) => (
-                            <View
-                                key={key}
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    marginTop: 10,
-                                }}>
-                                <TouchableOpacity onPress={() => remove(item)}>
-                                    <Icon name="close-outline" fill="black" width={20} height={20} />
-                                </TouchableOpacity>
-                                <Text style={styles.textStyle}>
-                                    {item.name ? item.name : ''}{' '}
-                                    {files.length == key + 1 ? '' : '; '}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
-                </ScrollView>
+                {detailes && (
+                    <ScrollView style={{ flex: 1 }}>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                            {files.map((item, key) => (
+                                <View
+                                    key={key}
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginTop: 10,
+                                    }}>
+                                    <TouchableOpacity onPress={() => remove(item)}>
+                                        <Icon
+                                            name="close-outline"
+                                            fill="black"
+                                            width={20}
+                                            height={20}
+                                        />
+                                    </TouchableOpacity>
+                                    <Text style={styles.textStyle}>
+                                        {item.name ? item.name : ''}{' '}
+                                        {files.length == key + 1 ? '' : '; '}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    </ScrollView>
+                )}
             </View>
         </SafeAreaView>
     );

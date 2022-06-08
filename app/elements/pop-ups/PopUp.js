@@ -6,11 +6,20 @@ import {
     Keyboard,
     StyleSheet,
     Text,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { Icon } from 'react-native-eva-icons';
 import Row from '../components/Row';
 import { globalStyles } from '../../share/globalStyles';
 import { popupContext } from '../../contexts/PopupContext';
+
+const PopUpContainer = ({ children }) => {
+    return Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView behavior="position">{children}</KeyboardAvoidingView>
+    ) : (
+        <View>{children}</View>
+    );
+};
 
 const PopUp = ({ children, onClose, header }) => {
     const popup = useContext(popupContext);
@@ -22,27 +31,30 @@ const PopUp = ({ children, onClose, header }) => {
     };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View
-                style={{
-                    ...globalStyles.container,
-                    ...styles.loginForm,
-                }}>
-                <Row style={styles.header}>
-                    <View style={styles.headerItem}>
-                        <TouchableOpacity
-                            onPress={handlerOnClose}
-                            style={{ alignSelf: 'flex-start' }}>
-                            <Icon name="close-outline" fill="black" width={30} height={30} />
-                        </TouchableOpacity>
-                    </View>
+        <PopUpContainer>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View
+                    style={{
+                        ...globalStyles.container,
+                        ...styles.loginForm,
+                        paddingBottom: 20
+                    }}>
+                    <Row style={styles.header}>
+                        <View style={styles.headerItem}>
+                            <TouchableOpacity
+                                onPress={handlerOnClose}
+                                style={{ alignSelf: 'flex-start' }}>
+                                <Icon name="close-outline" fill="black" width={30} height={30} />
+                            </TouchableOpacity>
+                        </View>
 
-                    <Text style={styles.headerItem}>{header}</Text>
-                    <Text style={styles.headerItem} />
-                </Row>
-                {children}
-            </View>
-        </TouchableWithoutFeedback>
+                        <Text style={styles.headerItem}>{header}</Text>
+                        <Text style={styles.headerItem} />
+                    </Row>
+                    {children}
+                </View>
+            </TouchableWithoutFeedback>
+        </PopUpContainer>
     );
 };
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import {
-    StyleSheet,
     TextInput,
     Alert,
     Text,
@@ -9,19 +8,17 @@ import {
     TouchableOpacity,
     ScrollView,
     TouchableWithoutFeedback,
-    SafeAreaView,
-    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import Row from '../elements/components/Row';
-import { globalStyles, borderColor } from '../share/globalStyles';
+import { globalStyles } from '../share/globalStyles';
 import NoteService from '../services/NoteService';
 import CategoryService from '../services/CategoryService';
 import Button from '../elements/components/Button';
 import FormError from '../elements/forms/FormError';
 import FilePicker from '../elements/components/FilePicker';
-import SelectBox from 'react-native-multi-selectbox';
-import { xorBy } from 'lodash';
 import TagService from '../services/TagService';
 import Chosen from '../elements/components/Chosen';
 
@@ -55,13 +52,10 @@ const NoteEditScreen = ({ route, navigation }) => {
     const [allCategories, setAllCategories] = useState([]);
     const [allTags, setAllTags] = useState([]);
     const [tags, setTags] = useState([]);
-    const [tagText, setTagText] = useState('');
     const [_public, setPublic] = useState(true);
     const [errors, setErrors] = useState({});
     const [files, setFiles] = useState([]);
     const [close, setClose] = useState(null);
-    const [_keyboard, setKeyboard] = useState(false);
-    const [_keyboardHeight, setKeyboardHeight] = useState(0);
 
     useEffect(() => {
         fetchModels();
@@ -95,13 +89,6 @@ const NoteEditScreen = ({ route, navigation }) => {
         }
     };
 
-    const onMultiChangeTags = () => {
-        return (item) => {
-            let selectedTags = xorBy(tags, [item], 'name');
-            setTags(selectedTags);
-        };
-    };
-
     const handlerPress = () => {
         let _files = files.map((item) => item.id);
         let _tags = tags.map((item) => item.name);
@@ -117,7 +104,7 @@ const NoteEditScreen = ({ route, navigation }) => {
         promise?.then(
             (res) => {
                 if (uid) {
-                    navigation.navigate('NotesDetailes', res.data.data);
+                    navigation.navigate('DrowerNotesDetailes', res.data.data);
                 } else {
                     navigation.navigate('Notes', { filter: { per_page: 15, page: 1 } });
                 }
@@ -138,133 +125,106 @@ const NoteEditScreen = ({ route, navigation }) => {
         }
     };
 
-    // Keyboard.addListener('keyboardDidShow', (e) => {
-    //     setKeyboard(true);
-    //     setKeyboardHeight(e.endCoordinates.height);
-    // });
-    // Keyboard.addListener('keyboardDidHide', () => {
-    //     setKeyboard(false);
-    //     setKeyboardHeight(0);
-    // });
-
     return (
-        <TouchableWithoutFeedback
-            onPress={() => {
-                Keyboard.dismiss();
-            }}>
-            <ScrollView style={globalStyles.container} nestedScrollEnabled={true}>
-                <Row>
-                    <TextInput
-                        placeholder="Title"
-                        style={globalStyles.input}
-                        value={translations['en'].title}
-                        onChangeText={(data) => setTranslations({ en: { title: data } })}
-                    />
-                    <FormError errors={errors['translations.en.title']} />
-                </Row>
-                <Row>
-                    <TextInput
-                        placeholder="Text"
-                        style={{ ...globalStyles.input, ...{ minHeight: 70 } }}
-                        value={translations['en'].content}
-                        onChangeText={(data) => setTranslations({ en: { content: data } })}
-                        multiline={true}
-                    />
-                    <FormError errors={errors['translations.en.content']} />
-                </Row>
-                <Row>
-                    <Chosen
-                        items={allTags}
-                        selectedItems={tags}
-                        onChange={setTags}
-                        closeDropDown={close}
-                    />
-                </Row>
-                {/* <Row>
-                    <View
-                        style={{
-                            borderColor: borderColor,
-                            borderWidth: 1,
-                            padding: 7,
-                            borderRadius: 7,
-                        }}>
-                        <SelectBox
-                            listOptionProps={{}}
-                            canAddItems={true}
-                            label="Tags"
-                            labelStyle={{ display: 'none' }}
-                            options={allTags || []}
-                            selectedValues={tags || []}
-                            onMultiSelect={onMultiChangeTags()}
-                            onTapClose={onMultiChangeTags()}
-                            onAddItem={(name) => console.log(name)}
-                            arrowIconColor={textColor}
-                            searchIconColor={textColor}
-                            toggleIconColor={textColor}
-                            inputPlaceholder="Tags..."
-                            containerStyle={{
-                                borderColor: 'white',
-                                paddingVertical: 15,
-                            }}
-                            optionsLabelStyle={{ fontSize: 15 }}
-                            multiListEmptyLabelStyle={{
-                                fontSize: 15,
-                                color: textColor,
-                            }}
-                            inputFilterStyle={{ paddingHorizontal: 15, fontSize: 15 }}
-                            searchInputProps={{ placeholderTextColor: textColor }}
-                            optionContainerStyle={{
-                                backgroundColor: 'white',
-                                paddingVertical: 7,
-                                paddingHorizontal: 15,
-                            }}
-                            multiOptionContainerStyle={{ backgroundColor: textColor }}
-                            isMulti
+        <SafeAreaView style={{ flex: 1 }}>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    Keyboard.dismiss();
+                    setClose(!close);
+                    console.log(close);
+                }}>
+                <ScrollView style={globalStyles.container} nestedScrollEnabled={true}>
+                    <Row>
+                        <TextInput
+                            placeholder="Title"
+                            style={globalStyles.input}
+                            value={translations['en'].title}
+                            onChangeText={(data) => setTranslations({ en: { title: data } })}
                         />
-                    </View>
-                </Row> */}
-                <Row>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <CheckBox value={_public} onValueChange={() => setPublic(!_public)} />
-                        <TouchableOpacity onPress={() => setPublic(!_public)}>
-                            <Text>is public ?</Text>
-                        </TouchableOpacity>
-                    </View>
-                </Row>
-                <Row>
-                    <Text style={{ padding: 7, fontSize: 16 }}>Categories:</Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            flexWrap: 'wrap',
-                        }}>
-                        {allCategories.map((item) => (
-                            <View
-                                key={item.id}
-                                style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <CheckBox
-                                    value={category.includes(item.id)}
-                                    onValueChange={() => setCategory(item.id)}
-                                />
-                                <TouchableOpacity onPress={() => setCategory(item.id)}>
-                                    <Text>{item.name}</Text>
-                                </TouchableOpacity>
-                            </View>
-                        ))}
-                    </View>
-                    <View>
-                        <FormError errors={errors.category} />
-                    </View>
-                </Row>
-                <Row>
-                    <FilePicker files={files} onChange={setFiles} />
-                </Row>
-                <Row>
-                    <Button title={uid ? 'Edit' : 'Create'} onPress={handlerPress} />
-                </Row>
-            </ScrollView>
-        </TouchableWithoutFeedback>
+                        <FormError errors={errors['translations.en.title']} />
+                    </Row>
+                    <Row>
+                        <TextInput
+                            placeholder="Text"
+                            style={{ ...globalStyles.input, ...{ minHeight: 70 } }}
+                            value={translations['en'].content}
+                            onChangeText={(data) => setTranslations({ en: { content: data } })}
+                            multiline={true}
+                        />
+                        <FormError errors={errors['translations.en.content']} />
+                    </Row>
+                    <Row>
+                        <Chosen
+                            items={allTags}
+                            selectedItems={tags}
+                            onChange={setTags}
+                            closeDropDown={close}
+                            placeholder="Tags..."
+                        />
+                    </Row>
+                    <Row>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <CheckBox
+                                boxType="square"
+                                style={
+                                    Platform.OS == 'ios'
+                                        ? { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }
+                                        : {}
+                                }
+                                value={_public}
+                                onValueChange={() => setPublic(!_public)}
+                            />
+                            <TouchableOpacity onPress={() => setPublic(!_public)}>
+                                <Text>is public ?</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Row>
+                    <Row>
+                        <Text style={{ padding: 7, fontSize: 16 }}>Categories:</Text>
+                        <View
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'flex-end',
+                                flexWrap: 'wrap',
+                            }}>
+                            {allCategories.map((item) => (
+                                <View
+                                    key={item.id}
+                                    style={{
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        marginRight: 5,
+                                    }}>
+                                    <CheckBox
+                                        boxType="square"
+                                        style={
+                                            Platform.OS == 'ios'
+                                                ? { transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }
+                                                : {}
+                                        }
+                                        value={category.includes(item.id)}
+                                        onValueChange={() => setCategory(item.id)}
+                                    />
+                                    <TouchableOpacity onPress={() => setCategory(item.id)}>
+                                        <Text>{item.name}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            ))}
+                        </View>
+                        <View>
+                            <FormError errors={errors.category} />
+                        </View>
+                    </Row>
+                    <Row>
+                        <FilePicker files={files} onChange={setFiles} />
+                    </Row>
+                    <Row>
+                        <Button title={uid ? 'Update' : 'Create'} onPress={handlerPress} />
+                    </Row>
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </SafeAreaView>
     );
 };
 

@@ -9,6 +9,7 @@ import Header from '../elements/components/Header';
 import { popupContext } from '../contexts/PopupContext';
 import CreatePopUp from '../elements/pop-ups/CreatePopUp';
 import NoteEditScreen from '../screens/NoteEditScreen';
+import AuthDroweRoute from './AuthDrowerRoute';
 const Stack = createNativeStackNavigator();
 
 const PublicRoutes = () => {
@@ -27,18 +28,27 @@ const PublicRoutes = () => {
                         screenOptions={{
                             header: (params) => <Header params={params} />,
                         }}
-                        initialRouteName={auth.isSignedIn ? 'Notes' : 'Wellcome'}>
+                        initialRouteName={auth.isSignedIn ? 'AuthDrower' : 'Wellcome'}>
                         <Stack.Screen
                             name="Wellcome"
                             options={{ headerShown: false }}
                             component={WellcomeScreen}
                         />
                         <Stack.Screen name="Notes" component={NotesListScreen} />
-                        <Stack.Screen name="Note edit" component={NoteEditScreen} />
                         <Stack.Screen
-                            name="NotesDetailes"
-                            component={NotesDetailesScreen}
-                            options={({ route }) => ({ title: route.params.title })}
+                            name="Note edit"
+                            options={({ route }) => {
+                                return {
+                                    title: route.params?.title,
+                                    header: (params) => <Header params={params} />,
+                                };
+                            }}
+                            component={NoteEditScreen}
+                        />
+                        <Stack.Screen
+                            options={{ headerShown: false }}
+                            name="AuthDrower"
+                            component={AuthDroweRoute}
                         />
                     </Stack.Navigator>
                 </NavigationContainer>
